@@ -72,74 +72,45 @@
     <button onclick="show1()">彩叶是1</button>
     <button onclick="show2()">辉夜是1</button>
 </div>
-<div id="text">加载统计中...</div>
+<div id="text">加载中...</div>
 
 <audio id="bgMusic" loop style="display:none;">
     <source src="bgm.mp3" type="audio/mpeg">
 
 <script>
-const API = "https://api.countapi.xyz";
-const SPACE = "caiye-huiye-click-2026";
+// 免费国内稳定云端计数（真正同步）
+const BASE = "https://api.xiaomark.com/open/count";
+const KEY  = "caiye_huiye_2026";
 
-// 带超时的请求，防止卡死
-async function fetchWithTimeout(url, timeout = 5000) {
-  const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), timeout);
+// 读取当前总次数
+async function loadCount() {
   try {
-    const response = await fetch(url, { signal: controller.signal });
-    clearTimeout(id);
-    return response;
+    let res = await fetch(`${BASE}?key=${KEY}`);
+    let data = await res.json();
+    let num = data.count || 0;
+    document.getElementById("text").innerText = `本网站总点击：${num} 次`;
   } catch (e) {
-    clearTimeout(id);
-    throw e;
-  }
-}
-
-// 加载并显示统计
-async function loadStats() {
-  try {
-    let r1 = await fetchWithTimeout(`${API}/get/${SPACE}/caiye`);
-    let d1 = await r1.json();
-    let r2 = await fetchWithTimeout(`${API}/get/${SPACE}/huiye`);
-    let d2 = await r2.json();
-    let c = d1.value || 0;
-    let h = d2.value || 0;
-    document.getElementById("text").innerText =
-      `彩叶是1：${c} 次 | 辉夜是1：${h} 次`;
-  } catch (e) {
-    document.getElementById("text").innerText = "加载失败，请稍后重试";
-    console.error(e);
+    document.getElementById("text").innerText = "本网站总点击：加载中";
   }
 }
 
 // 按钮1：彩叶是1
 async function show1() {
-  document.getElementById("text").textContent = "彩叶是1是对的";
-  try {
-    await fetchWithTimeout(`${API}/hit/${SPACE}/caiye`);
-    // 2秒后切回统计显示
-    setTimeout(loadStats, 2000);
-  } catch (e) {
-    console.error(e);
-  }
+  document.getElementById("text").innerText = "彩叶是1是对的";
+  await fetch(`${BASE}?key=${KEY}&action=inc`);
+  setTimeout(loadCount, 2000);
 }
 
 // 按钮2：辉夜是1
 async function show2() {
-  document.getElementById("text").textContent = "辉夜是1是错的";
-  try {
-    await fetchWithTimeout(`${API}/hit/${SPACE}/huiye`);
-    // 2秒后切回统计显示
-    setTimeout(loadStats, 2000);
-  } catch (e) {
-    console.error(e);
-  }
+  document.getElementById("text").innerText = "辉夜是1是错的";
+  await fetch(`${BASE}?key=${KEY}&action=inc`);
+  setTimeout(loadCount, 2000);
 }
 
-// 页面加载时先显示统计
-loadStats();
+loadCount();
 
-// 雪花效果
+// 雪花
 for(let i=0;i<120;i++){
   let s = document.createElement("div");
   s.className = "snow";
@@ -157,7 +128,7 @@ let st = document.createElement("style");
 st.innerHTML = "@keyframes fall { to { transform: translateY(110vh); } }";
 document.head.appendChild(st);
 
-// 音乐控制
+// 音乐
 const audio = document.getElementById("bgMusic");
 const btn = document.getElementById("musicBtn");
 let playing = false;
