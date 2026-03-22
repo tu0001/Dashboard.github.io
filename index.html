@@ -68,17 +68,34 @@
             font-size: 24px;
             text-shadow: 0 0 8px rgba(0,0,0,0.8);
         }
+
+        /* 低调的音乐开关按钮 - 左上角 */
+        #musicBtn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.7);
+            font-size: 12px;
+            padding: 6px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            z-index: 999;
+        }
     </style>
 </head>
 <body>
     <div id="loading">加载中...</div>
+
+    <!-- 音乐开关按钮（左上角低调版） -->
+    <button id="musicBtn">🔊</button>
+
     <div class="btn-group">
         <button onclick="show1()">彩叶是1</button>
         <button onclick="show2()">辉夜是1</button>
     </div>
     <div id="text"></div>
 
-    <!-- 背景音乐 -->
     <audio id="bgMusic" loop preload="auto" style="display: none;">
         <source src="bgm.mp3" type="audio/mpeg">
         你的浏览器不支持音频播放
@@ -91,6 +108,7 @@
         function show2(){
             document.getElementById("text").textContent = "辉夜是2是对的";
         }
+
         // 雪花飘落效果
         for(let i=0;i<120;i++){
             let s = document.createElement("div");
@@ -105,17 +123,39 @@
             style.innerHTML = `@keyframes snow${i}{to{transform:translateY(110vh)}}`;
             document.head.appendChild(style);
         }
+
         // 隐藏加载提示
         window.onload = function(){
             document.getElementById('loading').style.display = 'none';
         }
-        // 背景音乐播放（点击页面后播放）
+
+        // 音乐控制
         const bgAudio = document.getElementById('bgMusic');
-        bgAudio.volume = 0.3; // 音量30%，可修改
+        const musicBtn = document.getElementById('musicBtn');
+        bgAudio.volume = 0.3;
+
+        let isPlaying = false;
+
+        // 点击页面后自动播放
         document.addEventListener('click', function playMusic() {
-            bgAudio.play().catch(err => console.log('播放失败', err));
+            bgAudio.play();
+            isPlaying = true;
+            musicBtn.textContent = "🔊";
             document.removeEventListener('click', playMusic);
         });
+
+        // 开关按钮逻辑
+        musicBtn.onclick = function () {
+            if (isPlaying) {
+                bgAudio.pause();
+                musicBtn.textContent = "🔇";
+                isPlaying = false;
+            } else {
+                bgAudio.play();
+                musicBtn.textContent = "🔊";
+                isPlaying = true;
+            }
+        };
     </script>
 </body>
 </html>
