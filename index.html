@@ -11,11 +11,11 @@
             box-sizing: border-box;
         }
         body {
-            /* 这里用相对路径，图片和index.html放在同一文件夹 */
             background-image: url('./background.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+            transition: background-image 0.5s ease-in-out;
             width: 100vw;
             height: 100vh;
             text-align: center;
@@ -29,6 +29,7 @@
             display: flex;
             gap: 20px;
             justify-content: center;
+            margin-bottom: 20px;
         }
         button {
             font-size: 22px;
@@ -58,21 +59,37 @@
             pointer-events: none;
             z-index: 1;
         }
+        #loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 24px;
+            text-shadow: 0 0 8px rgba(0,0,0,0.8);
+        }
     </style>
 </head>
 <body>
+    <div id="loading">加载中...</div>
     <div class="btn-group">
         <button onclick="show1()">彩叶是1</button>
         <button onclick="show2()">辉夜是1</button>
     </div>
     <div id="text"></div>
 
+    <!-- 背景音乐 -->
+    <audio id="bgMusic" loop preload="auto" style="display: none;">
+        <source src="bgm.mp3" type="audio/mpeg">
+        你的浏览器不支持音频播放
+    
+
     <script>
         function show1(){
             document.getElementById("text").textContent = "彩叶是1是对的";
         }
         function show2(){
-            document.getElementById("text").textContent = "辉夜是1是错的";
+            document.getElementById("text").textContent = "辉夜是2是对的";
         }
         // 雪花飘落效果
         for(let i=0;i<120;i++){
@@ -88,6 +105,18 @@
             style.innerHTML = `@keyframes snow${i}{to{transform:translateY(110vh)}}`;
             document.head.appendChild(style);
         }
+        // 隐藏加载提示
+        window.onload = function(){
+            document.getElementById('loading').style.display = 'none';
+        }
+        // 背景音乐播放（点击页面后播放）
+        const bgAudio = document.getElementById('bgMusic');
+        bgAudio.volume = 0.3; // 音量30%，可修改
+        document.addEventListener('click', function playMusic() {
+            bgAudio.play().catch(err => console.log('播放失败', err));
+            document.removeEventListener('click', playMusic);
+        });
     </script>
 </body>
 </html>
+
