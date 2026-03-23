@@ -15,6 +15,7 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+            transition: background-image 0.5s ease-in-out;
             width: 100vw;
             height: 100vh;
             text-align: center;
@@ -23,7 +24,6 @@
             flex-direction: column;
             justify-content: flex-end;
             padding-bottom: 10vh;
-            color: white;
         }
         .btn-group {
             display: flex;
@@ -38,12 +38,18 @@
             background: rgba(255, 255, 255, 0.9);
             border: none;
             cursor: pointer;
+            transition: all 0.2s;
+        }
+        button:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: scale(1.05);
         }
         #text {
             font-size: 28px;
+            color: #fff;
             font-weight: bold;
-            text-shadow: 0 0 8px rgba(0,0,0,0.8);
             margin-top: 20px;
+            text-shadow: 0 0 8px rgba(0,0,0,0.8);
         }
         .snow {
             position: fixed;
@@ -51,108 +57,121 @@
             border-radius: 50%;
             opacity: 0.8;
             pointer-events: none;
+            z-index: 1;
         }
+        #loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 24px;
+            text-shadow: 0 0 8px rgba(0,0,0,0.8);
+        }
+
+        /* 音乐开关 - 左上角 */
         #musicBtn {
             position: fixed;
             top: 20px;
             left: 20px;
-            background: rgba(255,255,255,0.2);
-            color: #fff;
-            border: none;
+            background: rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.7);
+            font-size: 12px;
             padding: 6px 10px;
             border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            z-index: 999;
+        }
+
+        /* QQ 按钮 - 右上角 */
+        #qqBtn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.7);
+            font-size: 12px;
+            padding: 6px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            z-index: 999;
         }
     </style>
 </head>
 <body>
+    <div id="loading">加载中...</div>
 
-<button id="musicBtn">🔊</button>
+    <button id="musicBtn">🔊</button>
 
-<div class="btn-group">
-    <button onclick="show1()">彩叶是1</button>
-    <button onclick="show2()">辉夜是1</button>
-</div>
-<div id="text">加载中...</div>
+    <!-- 右上角 QQ 按钮 -->
+    <button id="qqBtn" onclick="window.open('mqqwpa://im/chat?chat_type=wpa&uin=2054631836&version=1&src_type=web', '_blank')">
+      QQ
+    </button>
 
-<audio id="bgMusic" loop style="display:none;">
-    <source src="bgm.mp3" type="audio/mpeg">
+    <div class="btn-group">
+        <button onclick="show1()">彩叶是1</button>
+        <button onclick="show2()">辉夜是1</button>
+    </div>
+    <div id="text"></div>
 
-<script>
-// 免费国内稳定云端计数（真正同步）
-const BASE = "https://api.xiaomark.com/open/count";
-const KEY  = "caiye_huiye_2026";
+    <audio id="bgMusic" loop preload="auto" style="display: none;">
+        <source src="bgm.mp3" type="audio/mpeg">
+        你的浏览器不支持音频播放
+    
 
-// 读取当前总次数
-async function loadCount() {
-  try {
-    let res = await fetch(`${BASE}?key=${KEY}`);
-    let data = await res.json();
-    let num = data.count || 0;
-    document.getElementById("text").innerText = `本网站总点击：${num} 次`;
-  } catch (e) {
-    document.getElementById("text").innerText = "本网站总点击：加载中";
-  }
-}
+    <script>
+        function show1(){
+            document.getElementById("text").textContent = "彩叶是1是对的";
+        }
+        function show2(){
+            document.getElementById("text").textContent = "辉夜是2是对的";
+        }
 
-// 按钮1：彩叶是1
-async function show1() {
-  document.getElementById("text").innerText = "彩叶是1是对的";
-  await fetch(`${BASE}?key=${KEY}&action=inc`);
-  setTimeout(loadCount, 2000);
-}
+        // 雪花
+        for(let i=0;i<120;i++){
+            let s = document.createElement("div");
+            s.className = "snow";
+            let size = Math.random()*2 + 1;
+            s.style.width = s.style.height = size + "px";
+            s.style.left = Math.random()*100 + "vw";
+            s.style.top = Math.random()*100 + "vh";
+            s.style.animation = `snow${i} ${Math.random()*10 + 10}s linear infinite`;
+            document.body.appendChild(s);
+            let style = document.createElement('style');
+            style.innerHTML = `@keyframes snow${i}{to{transform:translateY(110vh)}}`;
+            document.head.appendChild(style);
+        }
 
-// 按钮2：辉夜是1
-async function show2() {
-  document.getElementById("text").innerText = "辉夜是1是错的";
-  await fetch(`${BASE}?key=${KEY}&action=inc`);
-  setTimeout(loadCount, 2000);
-}
+        // 隐藏加载
+        window.onload = function(){
+            document.getElementById('loading').style.display = 'none';
+        }
 
-loadCount();
+        // 音乐控制
+        const bgAudio = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+        bgAudio.volume = 0.3;
 
-// 雪花
-for(let i=0;i<120;i++){
-  let s = document.createElement("div");
-  s.className = "snow";
-  let size = Math.random()*3 + 1;
-  s.style.width = size+"px";
-  s.style.height = size+"px";
-  s.style.left = Math.random()*100+"vw";
-  s.style.top = Math.random()*100+"vh";
-  s.style.position = "fixed";
-  s.style.animation = `fall ${Math.random()*5+5}s linear infinite`;
-  document.body.appendChild(s);
-}
+        let isPlaying = false;
 
-let st = document.createElement("style");
-st.innerHTML = "@keyframes fall { to { transform: translateY(110vh); } }";
-document.head.appendChild(st);
+        document.addEventListener('click', function playMusic() {
+            bgAudio.play();
+            isPlaying = true;
+            musicBtn.textContent = "🔊";
+            document.removeEventListener('click', playMusic);
+        });
 
-// 音乐
-const audio = document.getElementById("bgMusic");
-const btn = document.getElementById("musicBtn");
-let playing = false;
-
-document.addEventListener("click", ()=>{
-  if(!playing){
-    audio.play();
-    playing = true;
-    btn.innerText = "🔊";
-  }
-});
-
-btn.onclick = ()=>{
-  if(playing){
-    audio.pause();
-    btn.innerText = "🔇";
-    playing = false;
-  }else{
-    audio.play();
-    btn.innerText = "🔊";
-    playing = true;
-  }
-};
-</script>
-
+        musicBtn.onclick = function () {
+            if (isPlaying) {
+                bgAudio.pause();
+                musicBtn.textContent = "🔇";
+                isPlaying = false;
+            } else {
+                bgAudio.play();
+                musicBtn.textContent = "🔊";
+                isPlaying = true;
+            }
+        };
+    </script>
 </body>
 </html>
