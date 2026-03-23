@@ -69,25 +69,11 @@
             text-shadow: 0 0 8px rgba(0,0,0,0.8);
         }
 
-        /* 音乐开关 - 左上角 */
+        /* 低调的音乐开关按钮 - 左上角 */
         #musicBtn {
             position: fixed;
             top: 20px;
             left: 20px;
-            background: rgba(255,255,255,0.15);
-            color: rgba(255,255,255,0.7);
-            font-size: 12px;
-            padding: 6px 10px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.2);
-            z-index: 999;
-        }
-
-        /* QQ 按钮 - 右上角 */
-        #qqBtn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
             background: rgba(255,255,255,0.15);
             color: rgba(255,255,255,0.7);
             font-size: 12px;
@@ -101,12 +87,8 @@
 <body>
     <div id="loading">加载中...</div>
 
+    <!-- 音乐开关按钮（左上角低调版） -->
     <button id="musicBtn">🔊</button>
-
-    <!-- 右上角 QQ 按钮 -->
-    <button id="qqBtn" onclick="window.open('mqqwpa://im/chat?chat_type=wpa&uin=2054631836&version=1&src_type=web', '_blank')">
-      QQ
-    </button>
 
     <div class="btn-group">
         <button onclick="show1()">彩叶是1</button>
@@ -127,7 +109,7 @@
             document.getElementById("text").textContent = "辉夜是2是对的";
         }
 
-        // 雪花
+        // 雪花飘落效果
         for(let i=0;i<120;i++){
             let s = document.createElement("div");
             s.className = "snow";
@@ -142,7 +124,7 @@
             document.head.appendChild(style);
         }
 
-        // 隐藏加载
+        // 隐藏加载提示
         window.onload = function(){
             document.getElementById('loading').style.display = 'none';
         }
@@ -154,6 +136,7 @@
 
         let isPlaying = false;
 
+        // 点击页面后自动播放
         document.addEventListener('click', function playMusic() {
             bgAudio.play();
             isPlaying = true;
@@ -161,6 +144,7 @@
             document.removeEventListener('click', playMusic);
         });
 
+        // 开关按钮逻辑
         musicBtn.onclick = function () {
             if (isPlaying) {
                 bgAudio.pause();
