@@ -2,175 +2,306 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>彩叶与辉夜</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>彩叶 · 辉夜 | 叶月之境</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
-            background-image: url('./background.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            transition: background-image 0.5s ease-in-out;
             width: 100vw;
             height: 100vh;
-            text-align: center;
             overflow: hidden;
+            font-family: 'Inter', system-ui, -apple-system, 'SF Pro Text', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(145deg, #0B1120 0%, #111827 100%);
+            background-size: cover;
+            background-position: center;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            padding-bottom: 10vh;
+            align-items: center;
+            padding-bottom: 12vh;
+            position: relative;
+            transition: background 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
-        .btn-group {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-bottom: 20px;
+
+        /* 动态氛围光晕层 - 提升高级感 */
+        body::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 30%, rgba(255, 200, 150, 0.08), transparent 70%);
+            pointer-events: none;
+            z-index: 0;
         }
-        button {
-            font-size: 22px;
-            padding: 14px 28px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.9);
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        button:hover {
-            background: rgba(255, 255, 255, 1);
-            transform: scale(1.05);
-        }
-        #text {
-            font-size: 28px;
-            color: #fff;
-            font-weight: bold;
-            margin-top: 20px;
-            text-shadow: 0 0 8px rgba(0,0,0,0.8);
-        }
-        .snow {
-            position: fixed;
-            background: white;
-            border-radius: 50%;
-            opacity: 0.8;
+
+        /* 磨砂玻璃遮罩 */
+        .glass-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
             pointer-events: none;
             z-index: 1;
         }
+
+        /* 按钮组 - 高级玻璃质感 */
+        .btn-group {
+            display: flex;
+            gap: 32px;
+            justify-content: center;
+            z-index: 20;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        button {
+            font-size: 1.35rem;
+            font-weight: 500;
+            padding: 14px 36px;
+            border-radius: 100px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.2);
+            font-family: inherit;
+            color: #F3F4F6;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 215, 150, 0.5);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: translateY(1px);
+            transition: 0.05s;
+        }
+
+        /* 特殊按钮高亮 */
+        #btnCaiye:hover {
+            box-shadow: 0 8px 25px rgba(255, 140, 70, 0.3);
+            border-color: rgba(255, 160, 100, 0.6);
+        }
+        #btnKaguya:hover {
+            box-shadow: 0 8px 25px rgba(140, 120, 255, 0.3);
+            border-color: rgba(170, 150, 255, 0.6);
+        }
+
+        /* 文字展示 - 高级光效 */
+        #text {
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: rgba(255, 255, 245, 0.95);
+            text-shadow: 0 2px 15px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 200, 100, 0.3);
+            margin-top: 28px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(24px);
+            padding: 14px 36px;
+            border-radius: 80px;
+            z-index: 20;
+            position: relative;
+            min-width: 260px;
+            text-align: center;
+            letter-spacing: 2px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.2s ease;
+            font-size: clamp(1.2rem, 5vw, 2rem);
+        }
+
+        /* 角落胶囊按钮 */
+        .corner-btn {
+            position: fixed;
+            top: 24px;
+            background: rgba(15, 20, 30, 0.6);
+            backdrop-filter: blur(16px);
+            border-radius: 40px;
+            padding: 8px 20px;
+            font-size: 0.9rem;
+            color: rgba(255, 250, 240, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.25s;
+            font-weight: 450;
+            letter-spacing: 0.5px;
+        }
+
+        .corner-btn:hover {
+            background: rgba(30, 40, 55, 0.8);
+            transform: scale(1.02);
+            border-color: rgba(255, 200, 120, 0.5);
+        }
+
+        #musicBtn { left: 24px; }
+        #videoBtn { right: 24px; }
+
+        /* 雪花粒子 - 极致性能版 */
+        .snow {
+            position: fixed;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.4));
+            border-radius: 50%;
+            pointer-events: none;
+            will-change: transform;
+            filter: blur(0.3px);
+        }
+
+        /* 加载动画 - 优雅 */
         #loading {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #fff;
-            font-size: 24px;
-            text-shadow: 0 0 8px rgba(0,0,0,0.8);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0A0F1A;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.6s ease, visibility 0.6s;
+            flex-direction: column;
+            gap: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .loader-ring {
+            width: 48px;
+            height: 48px;
+            border: 2px solid rgba(255, 220, 150, 0.25);
+            border-top: 2px solid #FFD966;
+            border-radius: 50%;
+            animation: spin 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text {
+            color: rgba(255, 245, 210, 0.8);
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            font-weight: 300;
         }
 
-        /* 音乐按钮 - 左上角 */
-        #musicBtn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: rgba(255,255,255,0.15);
-            color: rgba(255,255,255,0.7);
-            font-size: 12px;
-            padding: 6px 10px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.2);
-            z-index: 999;
-        }
-
-        /* 彩蛋视频按钮 - 右上角 */
-        #videoBtn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(255,255,255,0.15);
-            color: rgba(255,255,255,0.7);
-            font-size: 12px;
-            padding: 6px 10px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.2);
-            z-index: 999;
+        /* 响应式 */
+        @media (max-width: 640px) {
+            .btn-group { gap: 18px; }
+            button { padding: 10px 24px; font-size: 1.1rem; }
+            #text { padding: 10px 24px; margin-top: 20px; }
+            .corner-btn { padding: 6px 14px; font-size: 0.75rem; top: 16px; }
+            body { padding-bottom: 10vh; }
         }
     </style>
 </head>
 <body>
-    <div id="loading">加载中...</div>
+    <div id="loading">
+        <div class="loader-ring"></div>
+        <div class="loading-text">叶月之境 · 流光待启</div>
+    </div>
 
-    <button id="musicBtn">🔊</button>
-    <button id="videoBtn">✨</button>
+    <div class="glass-overlay"></div>
+
+    <button id="musicBtn" class="corner-btn">🎵 萦绕之音</button>
+    <button id="videoBtn" class="corner-btn">✨ 秘语之扉</button>
 
     <div class="btn-group">
-        <button onclick="show1()">彩叶是1</button>
-        <button onclick="show2()">辉夜是1</button>
+        <button id="btnCaiye">🍁 彩叶是壹</button>
+        <button id="btnKaguya">🌙 辉夜是壹</button>
     </div>
-    <div id="text"></div>
+    <div id="text">✦ 轻触，聆听心语 ✦</div>
 
     <audio id="bgMusic" loop preload="auto" style="display: none;">
         <source src="bgm.mp3" type="audio/mpeg">
-        你的浏览器不支持音频播放
     
 
     <script>
-        function show1(){
-            document.getElementById("text").textContent = "彩叶是1是对的";
-        }
-        function show2(){
-            document.getElementById("text").textContent = "辉夜是1是错的";
-        }
-
-        // 雪花
-        for(let i=0;i<120;i++){
-            let s = document.createElement("div");
-            s.className = "snow";
-            let size = Math.random()*2 + 1;
-            s.style.width = s.style.height = size + "px";
-            s.style.left = Math.random()*100 + "vw";
-            s.style.top = Math.random()*100 + "vh";
-            s.style.animation = `snow${i} ${Math.random()*10 + 10}s linear infinite`;
-            document.body.appendChild(s);
-            let style = document.createElement('style');
-            style.innerHTML = `@keyframes snow${i}{to{transform:translateY(110vh)}}`;
-            document.head.appendChild(style);
-        }
-
-        window.onload = function(){
-            document.getElementById('loading').style.display = 'none';
-        }
-
-        // 音乐控制
-        const bgAudio = document.getElementById('bgMusic');
-        const musicBtn = document.getElementById('musicBtn');
-        bgAudio.volume = 0.3;
-        let isPlaying = false;
-
-        document.addEventListener('click', function playMusic() {
-            bgAudio.play();
-            isPlaying = true;
-            musicBtn.textContent = "🔊";
-            document.removeEventListener('click', playMusic);
-        });
-
-        musicBtn.onclick = function () {
-            if (isPlaying) {
-                bgAudio.pause();
-                musicBtn.textContent = "🔇";
-                isPlaying = false;
-            } else {
-                bgAudio.play();
-                musicBtn.textContent = "🔊";
-                isPlaying = true;
+        (function() {
+            // ==================== 核心按钮逻辑 ====================
+            const textEl = document.getElementById('text');
+            
+            // 彩叶按钮 - 显示正确文案
+            document.getElementById('btnCaiye').onclick = () => {
+                textEl.textContent = '🍁 彩叶是1是对的 🍁';
+                textEl.style.transform = 'scale(1.02)';
+                textEl.style.transition = 'transform 0.12s ease';
+                setTimeout(() => { textEl.style.transform = 'scale(1)'; }, 120);
+                createParticleGlow('#FFA559', 6);
+            };
+            
+            // 辉夜按钮 - 显示正确文案
+            document.getElementById('btnKaguya').onclick = () => {
+                textEl.textContent = '🌙 辉夜是1是错的 🌙';
+                textEl.style.transform = 'scale(1.02)';
+                setTimeout(() => { textEl.style.transform = 'scale(1)'; }, 120);
+                createParticleGlow('#9D8CFF', 6);
+            };
+            
+            // 轻量粒子反馈
+            function createParticleGlow(color, count = 6) {
+                const rect = textEl.getBoundingClientRect();
+                for (let i = 0; i < count; i++) {
+                    const particle = document.createElement('div');
+                    particle.style.position = 'fixed';
+                    particle.style.width = '6px';
+                    particle.style.height = '6px';
+                    particle.style.background = color;
+                    particle.style.borderRadius = '50%';
+                    particle.style.pointerEvents = 'none';
+                    particle.style.zIndex = '999';
+                    particle.style.filter = 'blur(2px)';
+                    particle.style.opacity = '0.7';
+                    particle.style.left = (rect.left + rect.width / 2 + (Math.random() - 0.5) * 60) + 'px';
+                    particle.style.top = (rect.top + rect.height / 2 + (Math.random() - 0.5) * 40) + 'px';
+                    document.body.appendChild(particle);
+                    
+                    let opacity = 0.7;
+                    let size = 6;
+                    const animate = () => {
+                        opacity -= 0.035;
+                        size += 1.2;
+                        particle.style.opacity = opacity;
+                        particle.style.width = size + 'px';
+                        particle.style.height = size + 'px';
+                        particle.style.transform = `translateY(-${(1 - opacity) * 18}px)`;
+                        if (opacity <= 0) {
+                            particle.remove();
+                            return;
+                        }
+                        requestAnimationFrame(animate);
+                    };
+                    requestAnimationFrame(animate);
+                }
             }
-        };
-
-        // 彩蛋：打开你的B站视频
-        document.getElementById('videoBtn').onclick = function(){
-            window.open("https://b23.tv/PKMu7Pw", "_blank");
-        };
-    </script>
-</body>
-</html>
+            
+            // ==================== 雪花系统 - 极致性能 + 优雅飘落 ====================
+            const SNOW_COUNT = 55;
+            let snowList = [];
+            let snowAnimationId = null;
+            
+            function initSnowOptimized() {
+                const oldSnow = document.querySelectorAll('.snow');
+                oldSnow.forEach(s => s.remove());
+                snowList = [];
+                
+                for (let i = 0; i < SNOW_COUNT; i++) {
+                    const snow = document.createElement('div');
+                    snow.className = 'snow';
+                    const size = Math.random() * 4 + 1.2;
+                    snow.style.width = size + 'px';
+                    snow.style.height = size + 'px';
+                    snow.style.left = Math.random() * 100 + '%';
+                    snow.style.top = Math.random() * 100 + '%';
+                    snow.style.opacity = Math.random() * 0.55 + 0.25;
+                    document.body.appendChild(snow);
+                    
+                    snowList.push({
+                        el: snow,
+                        x: parseFloat(snow.style.left),
+                        y: parseFloat(snow.style.top),
+                        speedY: Math.random() * 
