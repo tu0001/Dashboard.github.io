@@ -5,26 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>彩叶 · 辉夜 | 叶月之境</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             width: 100vw;
             height: 100vh;
             overflow: hidden;
             font-family: 'Inter', system-ui, -apple-system, 'SF Pro Text', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(145deg, #0B1120 0%, #111827 100%);
-            background-size: cover;
-            background-position: center;
+            /* 强制背景图优先，CSS直接加载，不依赖JS */
+            background: url('background.jpg') no-repeat center center / cover !important;
+            background-color: #0B1120; /* 兜底色，防止图加载失败 */
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
             align-items: center;
             padding-bottom: 12vh;
             position: relative;
-            transition: background 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
         body::after {
             content: '';
@@ -193,7 +188,7 @@
             const textEl = document.getElementById('text');
             const loadingDiv = document.getElementById('loading');
 
-            // 1. 强制兜底：3秒后自动隐藏loading，绝对不卡死
+            // 3秒后强制隐藏loading
             setTimeout(() => {
                 if (loadingDiv) {
                     loadingDiv.style.opacity = '0';
@@ -201,7 +196,7 @@
                 }
             }, 3000);
 
-            // 彩叶/辉夜按钮逻辑
+            // 按钮逻辑
             document.getElementById('btnCaiye').onclick = () => {
                 textEl.textContent = '🍁 彩叶是1是对的 🍁';
                 textEl.style.transform = 'scale(1.02)';
@@ -215,7 +210,7 @@
                 createParticleGlow('#9D8CFF', 6);
             };
 
-            // 粒子反馈
+            // 粒子效果
             function createParticleGlow(color, count = 6) {
                 const rect = textEl.getBoundingClientRect();
                 for (let i = 0; i < count; i++) {
@@ -234,7 +229,7 @@
                 }
             }
 
-            // 雪花系统（修复截断问题，完整可运行）
+            // 雪花系统
             const SNOW_COUNT = 55;
             let snowList = [], snowId = null;
             function initSnow() {
@@ -265,21 +260,7 @@
                 snowId = requestAnimationFrame(animate);
             }
 
-            // 背景图加载（修复逻辑，确保图片加载后生效）
-            function loadBg() {
-                const img = new Image();
-                img.onload = function() {
-                    document.body.style.backgroundImage = "url('./background.jpg')";
-                    document.body.style.backgroundSize = "cover";
-                    document.body.style.backgroundPosition = "center 30%";
-                };
-                img.onerror = function() {
-                    document.body.style.background = "radial-gradient(ellipse at 50% 30%, #1E2A3A, #0A0F1A)";
-                };
-                img.src = "./background.jpg";
-            }
-
-            // 音乐控制（修复状态不同步，100%稳）
+            // 音乐控制
             const bgAudio = document.getElementById('bgMusic');
             const musicBtn = document.getElementById('musicBtn');
             bgAudio.volume = 0.3;
@@ -287,20 +268,18 @@
                 if(bgAudio.paused) { bgAudio.play(); musicBtn.textContent = "🎵 萦绕之音"; }
                 else { bgAudio.pause(); musicBtn.textContent = "🔇 静寂之刻"; }
             };
-            // 首次点击自动播放
             let firstClick = () => {
                 bgAudio.play(); musicBtn.textContent = "🎵 萦绕之音";
                 document.removeEventListener('click', firstClick);
             };
             document.addEventListener('click', firstClick);
 
-            // 视频彩蛋（修复QQ拦截问题，加环境检测）
+            // 视频按钮
             const videoUrl = "https://b23.tv/PKMu7Pw";
             document.getElementById('videoBtn').onclick = (e) => {
                 e.stopPropagation();
                 e.target.style.transform = 'scale(0.96)';
                 setTimeout(() => e.target.style.transform = '', 120);
-                // QQ环境检测，引导用浏览器打开
                 const isQQ = /QQ/i.test(navigator.userAgent);
                 if(isQQ) {
                     alert(`请复制链接，在浏览器打开：\n${videoUrl}`);
@@ -310,13 +289,12 @@
                 }
             };
 
-            // 页面加载完成，隐藏loading
+            // 页面加载完成
             window.addEventListener('load', () => {
                 if(loadingDiv) {
                     loadingDiv.style.opacity = '0';
                     setTimeout(() => loadingDiv.style.display = 'none', 600);
                 }
-                loadBg();
                 initSnow();
                 // 文字入场动画
                 textEl.style.opacity = '0';
