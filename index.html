@@ -265,15 +265,15 @@
                 snowId = requestAnimationFrame(animate);
             }
 
-            // 背景图加载（修复逻辑写反的问题）
+            // 背景图加载（修复逻辑，确保图片加载后生效）
             function loadBg() {
                 const img = new Image();
-                img.onload = () => {
+                img.onload = function() {
                     document.body.style.backgroundImage = "url('./background.jpg')";
                     document.body.style.backgroundSize = "cover";
                     document.body.style.backgroundPosition = "center 30%";
                 };
-                img.onerror = () => {
+                img.onerror = function() {
                     document.body.style.background = "radial-gradient(ellipse at 50% 30%, #1E2A3A, #0A0F1A)";
                 };
                 img.src = "./background.jpg";
